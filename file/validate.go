@@ -17,6 +17,7 @@ func validRegistersShipping() []string {
 func defaultValidations() map[string]validation {
 	return map[string]validation{
 		"Tipo de registro inválido": func(line string) *utils.ErrorValidation {
+			// TODO: alterar para arquivos de retorno
 			if !utils.IsInStr(string(line[0]), validRegistersShipping()...) {
 				lineColor := color.AddColorSides(string(line[0]), color.Red) + line[1:]
 				return &utils.ErrorValidation{
