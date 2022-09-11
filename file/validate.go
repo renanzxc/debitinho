@@ -1,56 +1,61 @@
 package file
 
 import (
-	"fmt"
 	"log"
 
 	"debitinho/color"
 	"debitinho/utils"
 )
 
-type validation func(string) *utils.ErrorValidation
+// getAllowedLineTypes retorna os tipos de linhas que podem ser utilizadas por cada tipo de arquivo
+func getAllowedLineTypes(fileType FileType) (allowedLineTypes []LineType) {
+	switch fileType {
+	case FileShippingType:
+		allowedLineTypes = []LineType{LineTypeA, LineTypeC, LineTypeD, LineTypeE, LineTypeI, LineTypeJ, LineTypeK, LineTypeL, LineTypeZ}
+	case FileReturnType:
+		allowedLineTypes = []LineType{LineTypeA, LineTypeB, LineTypeF, LineTypeH, LineTypeT, LineTypeX, LineTypeZ}
+	default:
+		log.Fatal("Tipo de arquivo não identificado")
+	}
 
-func validRegistersShipping() []string {
-	return []string{"A", "C", "D", "E", "I", "J", "K", "L", "Z"}
+	return
 }
 
-func defaultValidations() map[string]validation {
-	return map[string]validation{
-		"Tipo de registro inválido": func(line string) *utils.ErrorValidation {
-			// TODO: alterar para arquivos de retorno
-			if !utils.IsInStr(string(line[0]), validRegistersShipping()...) {
-				lineColor := color.AddColorSides(string(line[0]), color.Red) + line[1:]
-				return &utils.ErrorValidation{
-					Err:  fmt.Errorf(`o arquivo de remessa contêm registro do tipo "%s"`, string(line[0])),
-					Line: &lineColor,
-				}
-			}
-
-			return nil
-		},
-		"Tamanho de resgitro inválido": func(line string) *utils.ErrorValidation {
-			if len(line) != 150 {
-				lineColor := color.AddColorSides(line, color.Red)
-				return &utils.ErrorValidation{
-					Err:  fmt.Errorf(""),
-					Line: &lineColor,
-				}
-			}
-
-			return nil
-		},
+func basicLineValidation(line string) {
+	if len(line) != 150 {
+		errorLine := color.AddColorSides(line, color.Red)
+		log.Fatalf("A linha possui um tamanho inválido\n%s", errorLine)
 	}
 }
 
-func defaultLineValidation(line string) {
-	for validationName, validt := range defaultValidations() {
-		errValid := validt(line)
-		if errValid != nil && errValid.Err != nil {
-			if errValid.Line != nil {
-				log.Fatalf("%s: %s \n%s", validationName, errValid.Err.Error(), *errValid.Line)
-			} else {
-				log.Fatalf("%s: %s", validationName, errValid.Err.Error())
-			}
+func basicFileValidation(file *File) {
+	var (
+		hasLines            = make(map[LineType]bool)
+		errorTypeMissingMsg = "O arquivo não possui registro(s) do(s) tipo(s) "
+		allowedLineTypes    = getAllowedLineTypes(file.Type)
+	)
+
+	if len(file.Lines) <= 0 {
+		log.Fatal("O arquivo não possui linhas")
+	}
+
+	for _, line := range file.Lines {
+		hasLines[line.Type()] = true
+		if !utils.IsIn(line.Type(), allowedLineTypes...) {
+			errorLine := color.AddColorSides(string(line.Type()), color.Red) + line.String()[1:]
+			log.Fatalf("O arquivo de %s contêm registro do tipo %s\n%s", string(file.Type), string(line.Type()), errorLine)
 		}
 	}
+
+	if !hasLines[LineTypeA] {
+		errorTypeMissingMsg += "'A'"
+	}
+	if !hasLines[LineTypeZ] {
+		errorTypeMissingMsg += "'Z'"
+	}
+
+	if !hasLines[LineTypeA] || !hasLines[LineTypeZ] {
+		log.Fatal(errorTypeMissingMsg)
+	}
+
 }

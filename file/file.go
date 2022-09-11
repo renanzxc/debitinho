@@ -1,15 +1,12 @@
 package file
 
-import (
-	"debitinho/utils"
-	"log"
-)
+import "log"
 
 type FileType string
 
 const (
-	ShippingType FileType = "remessa"
-	ReturnType   FileType = "retorno"
+	FileShippingType FileType = "remessa"
+	FileReturnType   FileType = "retorno"
 )
 
 type File struct {
@@ -18,28 +15,22 @@ type File struct {
 	Lines []ILine
 }
 
-func (f *File) identifyFileType(lines []string) {
-	for _, line := range lines {
-		if len(line) > 2 && line[0] == 'A' {
-			switch line[1] {
-			case '1':
-				f.Type = ShippingType
-			case '2':
-				f.Type = ReturnType
+func getFileType(file *File) (fType FileType) {
+	for _, line := range file.Lines {
+		if lineA, ok := line.(*LineA); ok {
+			switch lineA.ShippingCode {
+			case "1":
+				fType = FileShippingType
+			case "2":
+				fType = FileReturnType
 			}
 			break
 		}
 	}
 
-	if f.Type == "" {
-		userInput := utils.GetUserInput("Qual o tipo de arquivo? 1 - Remessa | 2 - Retorno")
-		switch userInput {
-		case "1":
-			f.Type = ShippingType
-		case "2":
-			f.Type = ReturnType
-		default:
-			log.Fatal("tipo de arquivo inválido")
-		}
+	if fType == "" {
+		log.Fatal("Tipo de arquivo não identificado")
 	}
+
+	return
 }

@@ -3,20 +3,24 @@ package file
 import (
 	"debitinho/utils"
 	"log"
+	"path/filepath"
 )
 
-func Parse(filePath string) (parsedFile *File) {
-	lines, err := utils.GetFileLines(filePath)
+func ParseFile(path string) (parsedFile *File) {
+	parsedFile = &File{Name: filepath.Base(path)}
+
+	linesStr, err := utils.GetFileLines(path)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	parsedFile = &File{Name: filePath}
-	parsedFile.identifyFileType(lines)
-	for ii := range lines {
-		line := NewLine(lines[ii])
+	for ii := range linesStr {
+		line := ParseLine(linesStr[ii])
 		parsedFile.Lines = append(parsedFile.Lines, line)
 	}
+
+	parsedFile.Type = getFileType(parsedFile)
+	basicFileValidation(parsedFile)
 
 	return
 }

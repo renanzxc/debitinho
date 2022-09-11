@@ -19,7 +19,7 @@ func main() {
 			Short: "exibe um arquivo de remessa/retorno",
 			Args:  cobra.ExactArgs(1),
 			Run: func(cmd *cobra.Command, args []string) {
-				file.ShowFile(file.Parse(args[0]))
+				file.ShowFile(file.ParseFile(args[0]))
 			},
 		}
 	)

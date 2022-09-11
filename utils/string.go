@@ -6,7 +6,17 @@ import (
 	"os"
 )
 
-func IsInStr(str string, strs ...string) bool {
+func IsIn[T comparable](str T, strs ...T) bool {
+	for ii := range strs {
+		if str == strs[ii] {
+			return true
+		}
+	}
+
+	return false
+}
+
+func IsInByte(str byte, strs ...byte) bool {
 	for ii := range strs {
 		if str == strs[ii] {
 			return true
