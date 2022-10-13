@@ -57,6 +57,9 @@ func (l *basicLine) Parse() (typedLine ILine) {
 	case LineTypeE:
 		typedLine = &LineE{basicLine: l}
 		l.MyType = LineTypeE
+	case LineTypeL:
+		typedLine = &LineL{basicLine: l}
+		l.MyType = LineTypeL
 	case LineTypeT:
 		typedLine = &LineT{basicLine: l}
 		l.MyType = LineTypeT
@@ -110,6 +113,20 @@ type LineE struct {
 }
 
 func (line *LineE) Validate() {
+
+}
+
+type LineL struct {
+	*basicLine
+	RegisterCode                 string `name:"Código do Registro" json:"codigo_do_registro" posicao:"0"`
+	AccountsBillingDate          string `name:"Data do Faturamento das Contas" json:"data_do_faturamento_das_contas" posicao:"1:9"`
+	InvoiceDueDate               string `name:"Data do Vencimento da Fatura" json:"data_do_vencimento_da_fatura" posicao:"9:17"`
+	ShippingBankDate             string `name:"Data de Remessa do Arquivo ao Banco" json:"data_de_remessa_do_arquivo_ao_banco" posicao:"17:25"`
+	ShippingPersonalPhysicalDate string `name:"Data de Remessa das Contas Físicas" json:"data_de_remessa_das_contas_fisicas" posicao:"25:33"`
+	ReserveFuture                string `name:"Reservado para o futuro" json:"reservado_para_o_futuro" posicao:"33:150"`
+}
+
+func (line *LineL) Validate() {
 
 }
 
