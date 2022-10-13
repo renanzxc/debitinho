@@ -15,7 +15,7 @@ func getAllowedLineTypes(fileType FileType) (allowedLineTypes []LineType) {
 	case FileReturnType:
 		allowedLineTypes = []LineType{LineTypeA, LineTypeB, LineTypeF, LineTypeH, LineTypeT, LineTypeX, LineTypeZ}
 	default:
-		log.Fatal("Tipo de arquivo não identificado")
+		log.Fatal("Tipo de arquivo não identificado!")
 	}
 
 	return
