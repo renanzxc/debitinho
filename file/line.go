@@ -54,6 +54,9 @@ func (l *basicLine) Parse() (typedLine ILine) {
 	case LineTypeA:
 		typedLine = &LineA{basicLine: l}
 		l.MyType = LineTypeA
+	case LineTypeE:
+		typedLine = &LineE{basicLine: l}
+		l.MyType = LineTypeE
 	case LineTypeZ:
 		typedLine = &LineZ{basicLine: l}
 		l.MyType = LineTypeZ
@@ -84,6 +87,26 @@ type LineA struct {
 }
 
 func (line *LineA) Validate() {
+
+}
+
+type LineE struct {
+	*basicLine
+	RegisterCode       string `name:"Código do Registro" json:"codigo_do_registro" posicao:"0"`
+	CustomerCompanyID  string `name:"Identificação do Cliente na Empresa" json:"identificacao_do_cliente_na_empresa" posicao:"1:26"`
+	Agency             string `name:"Agência para Débito" json:"agencia_para_debito" posicao:"26:30"`
+	CustomerBankID     string `name:"Identificação do Cliente no Banco" json:"identificacao_do_cliente_no_banco" posicao:"30:44"`
+	DueDate            string `name:"Data do Vencimento" json:"data_do_vencimento" posicao:"44:52"`
+	DebitValue         string `name:"Valor do Débito" json:"valor_do_debito" posicao:"52:67"`
+	CoinCode           string `name:"Código da moeda" json:"codigo_da_moeda" posicao:"67:69"`
+	CompanyUse         string `name:"Uso da Empresa" json:"uso_da_empresa" posicao:"69:129"`
+	IdentificationType string `name:"Tipo de Identificação" json:"tipo_de_identificacao" posicao:"129"`
+	Identification     string `name:"Identificação" json:"identificacao" posicao:"130:145"`
+	ReserveFuture      string `name:"Reservado para o futuro" json:"reservado_para_o_futuro" posicao:"145:149"`
+	MovingCode         string `name:"Código de movimento" json:"codigo_de_movimento" posicao:"149"`
+}
+
+func (line *LineE) Validate() {
 
 }
 
