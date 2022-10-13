@@ -57,6 +57,9 @@ func (l *basicLine) Parse() (typedLine ILine) {
 	case LineTypeE:
 		typedLine = &LineE{basicLine: l}
 		l.MyType = LineTypeE
+	case LineTypeT:
+		typedLine = &LineT{basicLine: l}
+		l.MyType = LineTypeT
 	case LineTypeZ:
 		typedLine = &LineZ{basicLine: l}
 		l.MyType = LineTypeZ
@@ -107,6 +110,18 @@ type LineE struct {
 }
 
 func (line *LineE) Validate() {
+
+}
+
+type LineT struct {
+	*basicLine
+	RegisterCode             string `name:"Código do Registro" json:"codigo_do_registro" posicao:"0"`
+	TotalDebitRegisters      string `name:"Total de registros debitados" json:"total_de_registros_debitados" posicao:"1:7"`
+	TotalDebitRegistersValue string `name:"Valor total dos registros debitados" json:"valor_total_dos_registros_debitados" posicao:"7:24"`
+	ReserveFuture            string `name:"Reservado para o futuro" json:"reservado_para_o_futuro" posicao:"24:150"`
+}
+
+func (line *LineT) Validate() {
 
 }
 
