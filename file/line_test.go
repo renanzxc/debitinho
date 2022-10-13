@@ -37,4 +37,27 @@ func TestFile(t *testing.T) {
 			require.Equal(t, mockParsedLineE, lineE)
 		})
 	})
+
+	t.Run(`Teste Parse Linha T`, func(t *testing.T) {
+		var (
+			mocklineTStr    = "T00000000000000000000000                                                                                                                              "
+			mockParsedlineT = LineT{
+				basicLine:                &basicLine{OriginLine: mocklineTStr},
+				RegisterCode:             "T",
+				TotalDebitRegisters:      "000000",
+				TotalDebitRegistersValue: "00000000000000000",
+				ReserveFuture:            "                                                                                                                              ",
+			}
+		)
+
+		t.Run(`Deve fazer o parse da linha com sucesso`, func(t *testing.T) {
+			var lineT = LineT{
+				basicLine: &basicLine{OriginLine: mocklineTStr},
+			}
+			err := parseLine(mocklineTStr, &lineT)
+			require.Nil(t, err)
+
+			require.Equal(t, mockParsedlineT, lineT)
+		})
+	})
 }
