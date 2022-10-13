@@ -7,11 +7,16 @@ import (
 )
 
 func TestFile(t *testing.T) {
-	t.Run(`Teste Parse Linha E`, func(t *testing.T) {
-		var (
-			mockLineEStr    = "E                        11234             12077010100000000000011103                                                          1X2000000999999999    0"
-			mockParsedLineE = LineE{
-				basicLine:          &basicLine{OriginLine: mockLineEStr},
+	var (
+		originLineE = "E                        11234             12077010100000000000011103                                                          1X2000000999999999    0"
+		originLineT = "T00000000000000000000000                                                                                                                              "
+
+		dataTest = map[string]ILine{
+			originLineE: &LineE{
+				basicLine: &basicLine{
+					OriginLine: originLineE,
+					MyType:     LineTypeE,
+				},
 				RegisterCode:       "E",
 				CustomerCompanyID:  "                        1",
 				Agency:             "1234",
@@ -24,40 +29,26 @@ func TestFile(t *testing.T) {
 				Identification:     "000000999999999",
 				ReserveFuture:      "    ",
 				MovingCode:         "0",
-			}
-		)
-
-		t.Run(`Deve fazer o parse da linha com sucesso`, func(t *testing.T) {
-			var lineE = LineE{
-				basicLine: &basicLine{OriginLine: mockLineEStr},
-			}
-			err := parseLine(mockLineEStr, &lineE)
-			require.Nil(t, err)
-
-			require.Equal(t, mockParsedLineE, lineE)
-		})
-	})
-
-	t.Run(`Teste Parse Linha T`, func(t *testing.T) {
-		var (
-			mocklineTStr    = "T00000000000000000000000                                                                                                                              "
-			mockParsedlineT = LineT{
-				basicLine:                &basicLine{OriginLine: mocklineTStr},
+			},
+			originLineT: &LineT{
+				basicLine: &basicLine{
+					OriginLine: originLineT,
+					MyType:     LineTypeT,
+				},
 				RegisterCode:             "T",
 				TotalDebitRegisters:      "000000",
 				TotalDebitRegistersValue: "00000000000000000",
 				ReserveFuture:            "                                                                                                                              ",
-			}
-		)
+			},
+		}
+	)
 
-		t.Run(`Deve fazer o parse da linha com sucesso`, func(t *testing.T) {
-			var lineT = LineT{
-				basicLine: &basicLine{OriginLine: mocklineTStr},
-			}
-			err := parseLine(mocklineTStr, &lineT)
-			require.Nil(t, err)
-
-			require.Equal(t, mockParsedlineT, lineT)
+	for originLineTest, expectedParsedLine := range dataTest {
+		t.Run(`Teste Parse Linha `+string(expectedParsedLine.Type()), func(t *testing.T) {
+			t.Run(`Deve fazer o parse da linha com sucesso`, func(t *testing.T) {
+				resultParsedLine := ParseLine(originLineTest)
+				require.Equal(t, expectedParsedLine, resultParsedLine)
+			})
 		})
-	})
+	}
 }
