@@ -9,6 +9,7 @@ import (
 func TestFile(t *testing.T) {
 	var (
 		originLineE = "E                        11234             12077010100000000000011103                                                          1X2000000999999999    0"
+		originLineL = "L20770101207701012077010120770101                                                                                                                     "
 		originLineT = "T00000000000000000000000                                                                                                                              "
 
 		dataTest = map[string]ILine{
@@ -39,6 +40,18 @@ func TestFile(t *testing.T) {
 				TotalDebitRegisters:      "000000",
 				TotalDebitRegistersValue: "00000000000000000",
 				ReserveFuture:            "                                                                                                                              ",
+			},
+			originLineL: &LineL{
+				basicLine: &basicLine{
+					OriginLine: originLineL,
+					MyType:     LineTypeL,
+				},
+				RegisterCode:                 "L",
+				AccountsBillingDate:          "20770101",
+				InvoiceDueDate:               "20770101",
+				ShippingBankDate:             "20770101",
+				ShippingPersonalPhysicalDate: "20770101",
+				ReserveFuture:                "                                                                                                                     ",
 			},
 		}
 	)

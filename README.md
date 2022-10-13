@@ -33,8 +33,8 @@ Saída:
 ### To Do:
 - [X] Adicionar parse do arquivo
 - [ ] Adicionar parse das linhas
-  - [X] A, Z, E, T
-  - [ ] B, C, D, F, H, I, J, K, L, X
+  - [X] A, Z, E, L, T
+  - [ ] B, C, D, F, H, I, J, K, X
 - [ ] Adicionar validações dos arquivos
 - [ ] Adicionar validações das linhas
   - [ ] A, B, C, D, E, F, H, I, J, K, L, T, X, Z
