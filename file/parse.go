@@ -3,7 +3,6 @@ package file
 import (
 	"debitinho/utils"
 	"errors"
-	"fmt"
 	"log"
 	"path/filepath"
 	"reflect"
@@ -40,7 +39,6 @@ func parseLine(originline string, line ILine) (err error) {
 		var posicaoInicial, posicaoFinal int64
 
 		if tagPosicao := reflectType.Field(ii).Tag.Get("posicao"); tagPosicao != "" {
-			fmt.Println("----", tagPosicao)
 			reflectValueField := reflectValue.Field(ii)
 			tagPosicaoArr := strings.Split(tagPosicao, ":")
 
